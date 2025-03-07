@@ -13,13 +13,26 @@ app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname)));
 
+async function connectDB() {
+    try {
+        console.log("-------------------------------------------------");
+        console.log('Connecting to MongoDB...');
+        const client = await MongoClient.connect(url);
+        console.log('Successfully connected to MongoDB');
+        return client;
+    } catch (err) {
+        console.error('MongoDB connection error:', err);
+        throw err;
+    }
+}
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.post('/submit', async (req, res) => {
     try {
-        const client = await MongoClient.connect(url);
+        const client = await connectDB();
         const dbo = client.db("test");
         const newData = {
             name: req.body.name,
@@ -32,6 +45,7 @@ app.post('/submit', async (req, res) => {
         };
         await dbo.collection("test_db").insertOne(newData);
         client.close();
+        console.log('Data inserted:', newData);
         res.redirect('/');
     } catch (err) {
         console.error('Error inserting data:', err);
@@ -41,10 +55,9 @@ app.post('/submit', async (req, res) => {
 
 app.get('/data', async (req, res) => {
     try {
-        const client = await MongoClient.connect(url);
+        const client = await connectDB();
         const dbo = client.db("test");
         const data = await dbo.collection("test_db").find({}).toArray();
-        console.log("-------------------------------------------");
         console.log('Data fetched:', data);
         res.json(data);
         client.close();
@@ -56,7 +69,7 @@ app.get('/data', async (req, res) => {
 
 app.get('/search', async (req, res) => {
     try {
-        const client = await MongoClient.connect(url);
+        const client = await connectDB();
         const dbo = client.db("test");
         const searchQuery = req.query.query;
         const query = searchQuery ? {
@@ -72,7 +85,6 @@ app.get('/search', async (req, res) => {
             ]
         } : {};
         const data = await dbo.collection("test_db").find(query).toArray();
-        console.log("-------------------------------------------");
         console.log('Search results:', data);
         res.json(data);
         client.close();
@@ -84,7 +96,7 @@ app.get('/search', async (req, res) => {
 
 app.put('/update/:id', async (req, res) => {
     try {
-        const client = await MongoClient.connect(url);
+        const client = await connectDB();
         const dbo = client.db("test");
         const id = req.params.id;
         const updatedData = {
@@ -98,6 +110,7 @@ app.put('/update/:id', async (req, res) => {
         };
         await dbo.collection("test_db").updateOne({ _id: new ObjectId(id) }, { $set: updatedData });
         client.close();
+        console.log('Data updated:', updatedData);
         res.sendStatus(200);
     } catch (err) {
         console.error('Error updating data:', err);
@@ -107,11 +120,12 @@ app.put('/update/:id', async (req, res) => {
 
 app.delete('/delete/:id', async (req, res) => {
     try {
-        const client = await MongoClient.connect(url);
+        const client = await connectDB();
         const dbo = client.db("test");
         const id = req.params.id;
         await dbo.collection("test_db").deleteOne({ _id: new ObjectId(id) });
         client.close();
+        console.log('Data deleted, ID:', id);
         res.sendStatus(200);
     } catch (err) {
         console.error('Error deleting data:', err);
