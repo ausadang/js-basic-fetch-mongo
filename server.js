@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
 
 app.post('/submit', async (req, res) => {
     try {
-        const client = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
+        const client = await MongoClient.connect(url);
         const dbo = client.db("test");
         const newData = {
             name: req.body.name,
@@ -41,9 +41,10 @@ app.post('/submit', async (req, res) => {
 
 app.get('/data', async (req, res) => {
     try {
-        const client = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
+        const client = await MongoClient.connect(url);
         const dbo = client.db("test");
         const data = await dbo.collection("test_db").find({}).toArray();
+        console.log("-------------------------------------------");
         console.log('Data fetched:', data);
         res.json(data);
         client.close();
@@ -55,7 +56,7 @@ app.get('/data', async (req, res) => {
 
 app.get('/search', async (req, res) => {
     try {
-        const client = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
+        const client = await MongoClient.connect(url);
         const dbo = client.db("test");
         const searchQuery = req.query.query;
         const query = searchQuery ? {
@@ -71,6 +72,7 @@ app.get('/search', async (req, res) => {
             ]
         } : {};
         const data = await dbo.collection("test_db").find(query).toArray();
+        console.log("-------------------------------------------");
         console.log('Search results:', data);
         res.json(data);
         client.close();
@@ -82,7 +84,7 @@ app.get('/search', async (req, res) => {
 
 app.put('/update/:id', async (req, res) => {
     try {
-        const client = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
+        const client = await MongoClient.connect(url);
         const dbo = client.db("test");
         const id = req.params.id;
         const updatedData = {
@@ -105,7 +107,7 @@ app.put('/update/:id', async (req, res) => {
 
 app.delete('/delete/:id', async (req, res) => {
     try {
-        const client = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
+        const client = await MongoClient.connect(url);
         const dbo = client.db("test");
         const id = req.params.id;
         await dbo.collection("test_db").deleteOne({ _id: new ObjectId(id) });
