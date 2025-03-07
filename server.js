@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const app = express();
-const port = 8080; //post
+const port = 8080;
 const url = process.env.TOKEN_URL;
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -28,7 +28,7 @@ app.post('/submit', async (req, res) => {
             city: req.body.city,
             country: req.body.country,
             born: req.body.born,
-            class: 'member' // Default
+            class: 'member'
         };
         await dbo.collection("test_db").insertOne(newData);
         client.close();
@@ -58,7 +58,6 @@ app.get('/search', async (req, res) => {
         const client = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
         const dbo = client.db("test");
         const searchQuery = req.query.query;
-        // confition ? true : false
         const query = searchQuery ? {
             $or: [
                 { name: { $regex: searchQuery, $options: 'i' } },
@@ -67,7 +66,7 @@ app.get('/search', async (req, res) => {
                 { age: { $regex: searchQuery, $options: 'i' } },
                 { grade: { $regex: searchQuery, $options: 'i' } },
                 { born: { $regex: searchQuery, $options: 'i' } },
-                { class: { $regex: searchQuery, $options: 'i' } }, // Include class in search
+                { class: { $regex: searchQuery, $options: 'i' } },
                 { _id: ObjectId.isValid(searchQuery) ? new ObjectId(searchQuery) : null }
             ]
         } : {};
@@ -93,7 +92,7 @@ app.put('/update/:id', async (req, res) => {
             city: req.body.city,
             country: req.body.country,
             born: req.body.born,
-            class: req.body.class // Include class in update
+            class: req.body.class
         };
         await dbo.collection("test_db").updateOne({ _id: new ObjectId(id) }, { $set: updatedData });
         client.close();
