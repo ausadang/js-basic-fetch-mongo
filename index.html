@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="script.js"></script>
+</head>
+
+<body>
+    <div class="register">
+        <h3>insert</h3>
+        <form id="register-form" action="/submit" method="post">
+            <input type="text" id="name" name="name" placeholder="name"><br>
+            <input type="text" id="age" name="age" placeholder="age"><br>
+            <input type="text" id="grade" name="grade" placeholder="grade"><br>
+            <input type="text" id="city" name="city" placeholder="city"><br>
+            <input type="text" id="country" name="country" placeholder="country"><br>
+            <input type="text" id="born" name="born" placeholder="born"><br>
+            <input type="submit" value="INSERT">
+        </form>
+    </div>
+    <br>
+    <div class="search">
+        <form id="search-form">
+            <input type="text" id="search-query" name="query" placeholder="Search">
+            <input type="submit" value="Search">
+        </form>
+    </div>
+
+    <div class="edit">
+        <form id="edit-form" style="display: none;">
+            <h3>edit data</h3>
+            <input type="hidden" id="edit-id" name="id">
+            <input type="text" id="edit-name" name="name" placeholder="name"><br>
+            <input type="text" id="edit-age" name="age" placeholder="age"><br>
+            <input type="text" id="edit-grade" name="grade" placeholder="grade"><br>
+            <input type="text" id="edit-city" name="city" placeholder="city"><br>
+            <input type="text" id="edit-country" name="country" placeholder="country"><br>
+            <input type="text" id="edit-born" name="born" placeholder="born"><br>
+            <input type="hidden" id="edit-class" name="class" placeholder="class"><br>
+            <input type="submit" value="Confirm">
+        </form>
+    </div>
+
+    <h3>fetch</h3>
+    <table id="data-table" border="1">
+        <thead>
+            <tr>
+                <th>_id</th>
+                <th>name</th>
+                <th>age</th>
+                <th>grade</th>
+                <th>city</th>
+                <th>country</th>
+                <th>born</th>
+                <th>class</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</body>
+
+</html>
